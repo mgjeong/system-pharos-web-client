@@ -14,4 +14,4 @@ $ pip install Flask flask-socketio requests PyYAML
 $ python run.py
 ``` 
 
-* Now you can use your own Web Client App on <your IP>:<5555>
+Now, you can access the Web Client App with <Host IP>:5555 by Explorer or Chrome
