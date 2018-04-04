@@ -2,7 +2,6 @@ import logging
 import argparse
 
 from flask import Flask
-from flask_socketio import SocketIO
 
 from src.common.objects import Port
 from src.flask.device_api import DeviceAPI
@@ -51,19 +50,15 @@ def main():
 
 
 def runserver(host="0.0.0.0", port=5555, debug=True):
-    # socket.io
-    socketio = SocketIO(app)
-
     # Rendered Page define
     Page.register_page(app)
     # API define using Web Client
-    DeviceAPI.register_api(app, socketio)
+    DeviceAPI.register_api(app)
     GroupAPI.register_api(app)
     CommonAPI.register_api(app)
 
     # run application with parameters
-    # app.run(host, port, debug)
-    socketio.run(app, host, port)
+    app.run(host, port, debug)
 
 if __name__ == "__main__":
     main()

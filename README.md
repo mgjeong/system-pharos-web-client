@@ -5,7 +5,7 @@
 - Python and required packages
 ```shell
 $ sudo apt-get install python
-$ sudo pip install Flask flask-socketio requests PyYAML
+$ sudo pip install Flask requests PyYAML
 ```
 
 ### How to run Web Client APP

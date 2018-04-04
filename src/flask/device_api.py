@@ -5,7 +5,6 @@ import logging
 import subprocess
 
 from flask import request, abort
-from flask_socketio import SocketIO, emit
 from src.common.objects import SDAManager, Port
 
 
@@ -14,7 +13,7 @@ class DeviceAPI:
         pass
 
     @classmethod
-    def register_api(cls, app, socketio):
+    def register_api(cls, app):
         # Get/Set SDA Manager IP
         @app.route("/sdamanager/address", methods=["GET", "POST"])
         def sda_manager_address():
