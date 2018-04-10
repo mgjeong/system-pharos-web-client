@@ -44,7 +44,7 @@ $(function() {
         $("#service_tbody").empty();
         $("tr").removeClass("active");
         $(this).addClass("active");
-        $("#app_name").text($(this).find("td:eq(1)").text());
+        $("#git_name").text($(this).find("td:eq(1)").text());
 
         var obj = new Object();
         obj.id = $(this).attr('title');

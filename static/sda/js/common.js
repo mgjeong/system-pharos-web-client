@@ -1,56 +1,55 @@
 var base_url = window.location.protocol + "//" + window.location.host;
 var git_index;
-var git_name;
 var yaml_index;
 var yaml_name;
 
 function sda_manager_control_show() {
-        $("#sda_main").removeClass("sda_container")
-        $("#sda_main").addClass("sda_container_with_control")
-        $("#sda_main").removeClass("col-lg-12")
-        $("#sda_main").addClass("col-lg-9")
+    $("#sda_main").removeClass("sda_container")
+    $("#sda_main").addClass("sda_container_with_control")
+    $("#sda_main").removeClass("col-lg-12")
+    $("#sda_main").addClass("col-lg-9")
 
-        $("#sda_side").removeClass("div_hidden")
-        $("#sda_side").addClass("div_show")
-        $("#sda_side").removeClass("col-lg-0")
-        $("#sda_side").addClass("col-lg-3")
+    $("#sda_side").removeClass("div_hidden")
+    $("#sda_side").addClass("div_show")
+    $("#sda_side").removeClass("col-lg-0")
+    $("#sda_side").addClass("col-lg-3")
 }
 
 function sda_manager_control_hide() {
-        $("#sda_main").removeClass("sda_container_with_control");
-        $("#sda_main").addClass("sda_container");
-        $("#sda_main").removeClass("col-lg-9")
-        $("#sda_main").addClass("col-lg-12")
+    $("#sda_main").removeClass("sda_container_with_control");
+    $("#sda_main").addClass("sda_container");
+    $("#sda_main").removeClass("col-lg-9")
+    $("#sda_main").addClass("col-lg-12")
 
-        $("#sda_side").removeClass("div_show");
-        $("#sda_side").addClass("div_hidden");
-        $("#sda_side").removeClass("col-lg-3");
-        $("#sda_side").addClass("col-lg-0");
+    $("#sda_side").removeClass("div_show");
+    $("#sda_side").addClass("div_hidden");
+    $("#sda_side").removeClass("col-lg-3");
+    $("#sda_side").addClass("col-lg-0");
 }
 
-function get_gits(){
+function get_gits() {
     $("#git_tbody").empty();
     $("#textarea_git").val("");
 
     $.ajax({
-        url: base_url +"/sdamanager/git",
+        url: base_url + "/sdamanager/git",
         type: "GET",
         dataType: "json",
-        error: function(error) {
+        error: function (error) {
             swal("server return error", "", "error");
         },
-        success: function(data, code) {
+        success: function (data, code) {
             if (code == "success") {
                 var list = $.parseJSON(data);
                 var listLen = list.gits.length;
                 for (var i = 0; i < listLen; i++) {
                     var No = i + 1;
                     $("#git_table tbody").append('<tr>'
-                    + '<td align="center" class="table_sda" style="vertical-align: middle;">' + No + '</td>'
-                    + '<td align="center" class="table_sda" style="vertical-align: middle;"><img height="50" width="50" src="' + base_url + '/static/user/' + list.gits[i].img + '"></td>'
-                    + '<td align="center" class="table_sda" style="vertical-align: middle;">' + list.gits[i].name + '</td>'
-                    + '<td align="center" class="table_sda" style="vertical-align: middle;">' + list.gits[i].description + '</td>'
-                    + '</tr>');
+                        + '<td align="center" class="table_sda" style="vertical-align: middle;">' + No + '</td>'
+                        + '<td align="center" class="table_sda" style="vertical-align: middle;"><img height="50" width="50" src="' + base_url + '/static/user/' + list.gits[i].img + '"></td>'
+                        + '<td align="center" class="table_sda" style="vertical-align: middle;">' + list.gits[i].name + '</td>'
+                        + '<td align="center" class="table_sda" style="vertical-align: middle;">' + list.gits[i].description + '</td>'
+                        + '</tr>');
                 }
             } else {
                 swal("server return error", "", "error");
@@ -64,27 +63,27 @@ function get_yamls() {
     $("#textarea_yaml").val("");
 
     $.ajax({
-        url: base_url +"/sdamanager/yaml",
+        url: base_url + "/sdamanager/yaml",
         type: "GET",
         dataType: "json",
-        error: function(error) {
+        error: function (error) {
             swal("server return error", "", "error");
         },
-        success: function(data, code) {
+        success: function (data, code) {
             if (code == "success") {
                 var list = $.parseJSON(data);
                 var listLen = list.yamls.length;
                 for (var i = 0; i < listLen; i++) {
                     var No = i + 1;
                     $("#yaml_table tbody").append('<tr>'
-                    + '<td align="center" class="table_sda" style="vertical-align: middle;">' + No + '</td>'
-                    + '<td align="center" class="table_sda" style="vertical-align: middle;"><img height="50" width="50" src="' + base_url + '/static/user/' + list.yamls[i].img + '"></td>'
-                    + '<td align="center" class="table_sda" style="vertical-align: middle;">' + list.yamls[i].name + '</td>'
-                    + '<td align="center" class="table_sda" style="vertical-align: middle;">' + list.yamls[i].description + '</td>'
-                    + '</tr>');
+                        + '<td align="center" class="table_sda" style="vertical-align: middle;">' + No + '</td>'
+                        + '<td align="center" class="table_sda" style="vertical-align: middle;"><img height="50" width="50" src="' + base_url + '/static/user/' + list.yamls[i].img + '"></td>'
+                        + '<td align="center" class="table_sda" style="vertical-align: middle;">' + list.yamls[i].name + '</td>'
+                        + '<td align="center" class="table_sda" style="vertical-align: middle;">' + list.yamls[i].description + '</td>'
+                        + '</tr>');
                 }
 
-                
+
             } else {
                 swal("server return error", "", "error");
             }
@@ -92,28 +91,28 @@ function get_yamls() {
     });
 }
 
-$(function() {
-    $("#git_tbody").on("click", "tr", function(e) {
+$(function () {
+    $("#git_tbody").on("click", "tr", function (e) {
         $("tr").removeClass("active");
         $(this).addClass("active");
 
         git_index = parseInt($(this).find("td:eq(0)").text()) - 1;
-        git_name = $(this).find("td:eq(2)").text();
+        $("#git_name").val($(this).find("td:eq(2)").text());
         $.ajax({
-            url: base_url +"/sdamanager/git",
+            url: base_url + "/sdamanager/git",
             type: "GET",
             contentType: "application/json",
             dataType: "json",
-            error: function(error) {
+            error: function (error) {
                 swal("server return error", "", "error");
             },
-            success: function(data, code) {
+            success: function (data, code) {
                 if (code == "success") {
                     var list = $.parseJSON(data);
                     var repo = list.gits[git_index].git;
                     $("#git_address").val(repo);
-                    if(repo.match('github.sec.samsung.net/')){ //samsung github
-                        var repo_split=repo.split("github.sec.samsung.net/");
+                    if (repo.match('github.sec.samsung.net/')) { //samsung github
+                        var repo_split = repo.split("github.sec.samsung.net/");
                         var obj = new Object();
                         obj.repo = repo_split[1];
                         $.ajax({
@@ -121,29 +120,25 @@ $(function() {
                             url: "/sdamanager/git/clone",
                             contentType: "application/json",
                             data: JSON.stringify(obj),
-                            error: function(error) {
+                            error: function (error) {
                                 swal("server return error", "", "error");
                             },
-                            success: function(data){
-                                data=$.parseJSON(data)
+                            success: function (data) {
+                                data = $.parseJSON(data)
                                 $("#textarea_yaml").val(data);
-                                $("#btn_deploy_app").removeAttr("disabled");
-                                $("#btn_deploy_group_app").removeAttr("disabled");
                             }
                         });
                     }
-                    else{ //public github
-                        var repo_split=repo.split("github.com/");
+                    else { //public github
+                        var repo_split = repo.split("github.com/");
                         $.ajax({
-                            url: "https://raw.githubusercontent.com/"+repo_split[1]+"/master/docker-compose.yml",
+                            url: "https://raw.githubusercontent.com/" + repo_split[1] + "/master/docker-compose.yml",
                             type: "GET",
-                            error: function(error) {
+                            error: function (error) {
                                 swal("Server return error", "", "error");
                             },
-                            success: function(data){
+                            success: function (data) {
                                 $("#textarea_yaml").val(data);
-                                $("#btn_deploy_app").removeAttr("disabled");
-                                $("#btn_deploy_group_app").removeAttr("disabled");
                             }
                         });
                     }
@@ -154,24 +149,21 @@ $(function() {
         });
     });
 
-    $("#yaml_tbody").on("click", "tr", function(e) {
+    $("#yaml_tbody").on("click", "tr", function (e) {
         $("tr").removeClass("active");
         $(this).addClass("active");
-
-        $("#btn_deploy_app").removeAttr("disabled");
-        $("#btn_deploy_group_app").removeAttr("disabled");
 
         yaml_index = parseInt($(this).find("td:eq(0)").text()) - 1;
         yaml_name = $(this).find("td:eq(2)").text();
         $.ajax({
-            url: base_url +"/sdamanager/yaml",
+            url: base_url + "/sdamanager/yaml",
             type: "GET",
             contentType: "application/json",
             dataType: "json",
-            error: function(error) {
+            error: function (error) {
                 swal("server return error", "", "error");
             },
-            success: function(data, code) {
+            success: function (data, code) {
                 if (code == "success") {
                     var list = $.parseJSON(data);
                     $("#textarea_yaml").val(list.yamls[yaml_index].yaml);
@@ -182,101 +174,116 @@ $(function() {
         });
     });
 
-    $("#btn_deploy_app").click(function() {
-        $.ajaxSetup({
-        beforeSend: function() {
-            $("div[name=loading_bar]").show();
-        },
-        complete: function() {
-            $("div[name=loading_bar]").hide();
+    $("#btn_deploy_app").click(function () {
+        var condition = 1;
+        if ($("#git_name").val() == "") {
+            swal("Please input a app name", "", "error");
+            condition = 0;
         }
-        });
-        var obj = new Object();
-        obj.name = git_name;
-        obj.git = $("#git_address").val();
-        obj.data = $("#textarea_yaml").val();
-        $.ajax({
-            url: base_url +"/sdamanager/app/install",
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify(obj),
-            error: function(error) {
-                swal("server return error", "", "error");
-            },
-            success: function(data, code) {
-                if (code == "success") {
-                    swal("Installed!", "", "success");
-                    $('#dig_install').modal('toggle');
-                    get_apps();
-                } else {
-                    swal("server return error.");
+        if (condition) {
+            $.ajaxSetup({
+                beforeSend: function () {
+                    $("div[name=loading_bar]").show();
+                },
+                complete: function () {
+                    $("div[name=loading_bar]").hide();
                 }
-            }
-        });
-        $.ajaxSetup({
-            beforeSend: function() {},
-            complete: function() {}
-        });
+            });
+            var obj = new Object();
+            obj.name = $("#git_name").val();
+
+            obj.git = $("#git_address").val();
+            obj.data = $("#textarea_yaml").val();
+            $.ajax({
+                url: base_url + "/sdamanager/app/install",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(obj),
+                error: function (error) {
+                    swal("server return error", "", "error");
+                },
+                success: function (data, code) {
+                    if (code == "success") {
+                        swal("Installed!", "", "success");
+                        $('#dig_install').modal('toggle');
+                        get_apps();
+                    } else {
+                        swal("server return error.");
+                    }
+                }
+            });
+            $.ajaxSetup({
+                beforeSend: function () { },
+                complete: function () { }
+            });
+        }
     });
 
-    $("#btn_deploy_group_app").click(function() {
-        $.ajaxSetup({
-        beforeSend: function() {
-            $("div[name=loading_bar]").show();
-        },
-        complete: function() {
-            $("div[name=loading_bar]").hide();
+    $("#btn_deploy_group_app").click(function () {
+        var condition = 1;
+        if ($("#git_name").val() == "") {
+            swal("Please input a app name", "", "error");
+            condition = 0;
         }
-        });
-        var obj = new Object();
-        obj.data = $("#textarea_yaml").val();
-        obj.name = git_name;
-        $.ajax({
-            url: base_url +"/sdamanager/group/deploy",
-            type: "POST",
-            contentType: "application/json",
-            dataType: "json",
-            data: JSON.stringify(obj),
-            error: function(error) {
-                swal("server return error", "", "error");
-            },
-            success: function(data, code) {
-                if (code == "success") {
-                    swal("Installed!", "", "success");
-                    $('#dig_group_install').modal('toggle');
-                    get_groups();
-                } else {
-                    swal("server return error.");
+        if (condition) {
+            $.ajaxSetup({
+                beforeSend: function () {
+                    $("div[name=loading_bar]").show();
+                },
+                complete: function () {
+                    $("div[name=loading_bar]").hide();
                 }
-            }
-        });
-        $.ajaxSetup({
-            beforeSend: function() {},
-            complete: function() {}
-        });
+            });
+            var obj = new Object();
+            obj.name = $("#git_name").val();
+            obj.data = $("#textarea_yaml").val();
+            $.ajax({
+                url: base_url + "/sdamanager/group/deploy",
+                type: "POST",
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify(obj),
+                error: function (error) {
+                    swal("server return error", "", "error");
+                },
+                success: function (data, code) {
+                    if (code == "success") {
+                        swal("Installed!", "", "success");
+                        $('#dig_group_install').modal('toggle');
+                        get_groups();
+                    } else {
+                        swal("server return error.");
+                    }
+                }
+            });
+            $.ajaxSetup({
+                beforeSend: function () { },
+                complete: function () { }
+            });
+        }
     });
 
-    $("#btn_install_new_app").click(function() {
+    $("#btn_install_new_app").click(function () {
         get_gits();
     });
 
-    $("#btn_deploy_app_group").click(function() {
+    $("#btn_deploy_app_group").click(function () {
         get_gits();
     });
 
-    $("#git_tbody").on("dblclick", "tr", function(e) {
+    $("#git_tbody").on("dblclick", "tr", function (e) {
         $("tr").removeClass("active");
         $(this).addClass("active");
         swal("Edit/Remove will be supported!!");
     });
 
-    $("#yaml_tbody").on("dblclick", "tr", function(e) {
+    $("#yaml_tbody").on("dblclick", "tr", function (e) {
         $("tr").removeClass("active");
         $(this).addClass("active");
         swal("Edit/Remove will be supported!!");
     });
 
-    $("#btn_confirm_add_new_git").click(function() {
+    $("#btn_confirm_add_new_git").click(function () {
         var obj = new Object();
         //obj.img = $("#create_new_yaml_icon").val();
         obj.img = "sample.png"
@@ -285,27 +292,25 @@ $(function() {
         obj.git = $("#create_new_git_address").val();
 
         $.ajax({
-            url: base_url +"/sdamanager/git",
+            url: base_url + "/sdamanager/git",
             type: "POST",
             contentType: "application/json",
             dataType: "text",
             data: JSON.stringify(obj),
-            error: function(error) {
+            error: function (error) {
                 swal("server return error", "", "error");
             },
-            success: function(data, code) {
+            success: function (data, code) {
                 if (code == "success") {
                     get_gits();
-                    $("#btn_deploy_app").attr("disabled", "disabled");
-                    $("#btn_deploy_group_app").attr("disabled", "disabled");
                 } else {
                     swal("server return error.");
                 }
             }
         });
         $.ajaxSetup({
-            beforeSend: function() {},
-            complete: function() {}
+            beforeSend: function () { },
+            complete: function () { }
         });
     });
 });
