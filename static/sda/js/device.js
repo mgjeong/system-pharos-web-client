@@ -233,40 +233,47 @@ $(function() {
     });
 
     $("#btn_confirm_update_YAML").click(function() {
-        var obj = new Object();
-        obj.data = $("#textarea_update_new_yaml").val();
-        swal({
-            title:"Do you want to update YAML?",
-            type:"info",
-            allowOutsideClick:false,
-            showCancelButton: true,
-            confirmButtonText:"Yes",
-            cancelButtonText:"No",
-            closeOnConfirm: false,
-            showLoaderOnConfirm: true
-            },
-            function(){
-                setTimeout(function(){
-                    $.ajax({
-                        url: base_url +"/sdamanager/app/yaml",
-                        type: "POST",
-                        contentType: "application/json",
-                        data: JSON.stringify(obj),
-                        error: function(error) {
-                            swal("Server return error", "", "error");
-                        },
-                        success: function(data, code) {
-                            if (code == "success") {
-                                swal("Updated!", "", "success");
-                                $('#dig_update_YAML').modal('toggle');
-                            } else {
-                                alert("Server return error.");
+        var condition = 1
+        if ($("#textarea_update_new_yaml").val() == "") {
+            swal("Please input a new yaml", "", "error");
+            condition = 0;
+        }
+        if (condition) {
+            var obj = new Object();
+            obj.data = $("#textarea_update_new_yaml").val();
+            swal({
+                title:"Do you want to update YAML?",
+                type:"info",
+                allowOutsideClick:false,
+                showCancelButton: true,
+                confirmButtonText:"Yes",
+                cancelButtonText:"No",
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true
+                },
+                function(){
+                    setTimeout(function(){
+                        $.ajax({
+                            url: base_url +"/sdamanager/app/yaml",
+                            type: "POST",
+                            contentType: "application/json",
+                            data: JSON.stringify(obj),
+                            error: function(error) {
+                                swal("Server return error", "", "error");
+                            },
+                            success: function(data, code) {
+                                if (code == "success") {
+                                    swal("Updated!", "", "success");
+                                    $('#dig_update_YAML').modal('toggle');
+                                } else {
+                                    alert("Server return error.");
+                                }
                             }
-                        }
-                    });
-                }, 2000);
-            }
-        );
+                        });
+                    }, 2000);
+                }
+            );
+        }
     });
 
     $("#btn_confirm_get_YAML").click(function(){
@@ -287,8 +294,6 @@ $(function() {
                 success: function(data){
                     data=$.parseJSON(data)
                     $("#textarea_update_new_yaml").val(data);
-                    
-                    $("#btn_confirm_update_YAML").removeAttr("disabled");
                 }
             });
         }
@@ -302,8 +307,6 @@ $(function() {
                 },
                 success: function(data){
                     $("#textarea_update_new_yaml").val(data);
-
-                    $("#btn_confirm_update_YAML").removeAttr("disabled");
                 }
             });
         }
