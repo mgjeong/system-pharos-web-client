@@ -27,9 +27,52 @@ function sda_manager_control_hide() {
     $("#sda_side").addClass("col-lg-0");
 }
 
+function delete_git(trNum) {
+    $("#git_tbody").empty();
+    $("#git_name").val("");
+    $("#git_address").val("");
+    $("#textarea_yaml").val("");
+    $.ajax({
+        url: base_url + "/sdamanager/git",
+        type: "GET",
+        dataType: "json",
+        error: function (error) {
+            swal("server return error", "", "error");
+        },
+        success: function (data, code) {
+            if (code == "success") {
+                var list = $.parseJSON(data);
+                list.gits.splice(trNum, 1);
+                $.ajax({
+                    url: base_url + "/sdamanager/git",
+                    type: "DELETE",
+                    contentType: "application/json",
+                    dataType: "text",
+                    data: JSON.stringify(list),
+                    error: function (error) {
+                        swal("server return error", "", "error");
+                    },
+                    success: function (data, code) {
+                        if (code == "success") {
+                            get_gits();
+                        } else {
+                            swal("server return error.");
+                        }
+                    }
+                });
+            }
+            else {
+                swal("server return error.");
+            }
+        }  
+    });
+}
+
 function get_gits() {
     $("#git_tbody").empty();
-    $("#textarea_git").val("");
+    $("#git_name").val("");
+    $("#git_address").val("");
+    $("#textarea_yaml").val("");
 
     $.ajax({
         url: base_url + "/sdamanager/git",
@@ -272,9 +315,8 @@ $(function () {
     });
 
     $("#git_tbody").on("dblclick", "tr", function (e) {
-        $("tr").removeClass("active");
-        $(this).addClass("active");
-        swal("Edit/Remove will be supported!!");
+        var trNum = $(this).closest('tr').prevAll().length;
+        delete_git(trNum)
     });
 
     $("#yaml_tbody").on("dblclick", "tr", function (e) {
