@@ -218,92 +218,86 @@ $(function () {
     });
 
     $("#btn_deploy_app").click(function () {
-        var condition = 1;
         if ($("#git_name").val() == "") {
             swal("Please input a app name", "", "error");
-            condition = 0;
+            return
         }
-        if (condition) {
-            $.ajaxSetup({
-                beforeSend: function () {
-                    $("div[name=loading_bar]").show();
-                },
-                complete: function () {
-                    $("div[name=loading_bar]").hide();
-                }
-            });
-            var obj = new Object();
-            obj.name = $("#git_name").val();
+        $.ajaxSetup({
+            beforeSend: function () {
+                $("div[name=loading_bar]").show();
+            },
+            complete: function () {
+                $("div[name=loading_bar]").hide();
+            }
+        });
+        var obj = new Object();
+        obj.name = $("#git_name").val();
 
-            obj.git = $("#git_address").val();
-            obj.data = $("#textarea_yaml").val();
-            $.ajax({
-                url: base_url + "/sdamanager/app/install",
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify(obj),
-                error: function (error) {
-                    swal("server return error", "", "error");
-                },
-                success: function (data, code) {
-                    if (code == "success") {
-                        swal("Installed!", "", "success");
-                        $('#dig_install').modal('toggle');
-                        get_apps();
-                    } else {
-                        swal("server return error.");
-                    }
+        obj.git = $("#git_address").val();
+        obj.data = $("#textarea_yaml").val();
+        $.ajax({
+            url: base_url + "/sdamanager/app/install",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(obj),
+            error: function (error) {
+                swal("server return error", "", "error");
+            },
+            success: function (data, code) {
+                if (code == "success") {
+                    swal("Installed!", "", "success");
+                    $('#dig_install').modal('toggle');
+                    get_apps();
+                } else {
+                    swal("server return error.");
                 }
-            });
-            $.ajaxSetup({
-                beforeSend: function () { },
-                complete: function () { }
-            });
-        }
+            }
+        });
+        $.ajaxSetup({
+            beforeSend: function () { },
+            complete: function () { }
+        });
     });
 
     $("#btn_deploy_group_app").click(function () {
-        var condition = 1;
         if ($("#git_name").val() == "") {
             swal("Please input a app name", "", "error");
-            condition = 0;
-        }
-        if (condition) {
-            $.ajaxSetup({
-                beforeSend: function () {
-                    $("div[name=loading_bar]").show();
-                },
-                complete: function () {
-                    $("div[name=loading_bar]").hide();
+            return
+    }
+        $.ajaxSetup({
+            beforeSend: function () {
+                $("div[name=loading_bar]").show();
+            },
+            complete: function () {
+                $("div[name=loading_bar]").hide();
+            }
+        });
+        var obj = new Object();
+        obj.name = $("#git_name").val();
+        obj.data = $("#textarea_yaml").val();
+        $.ajax({
+            url: base_url + "/sdamanager/group/deploy",
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify(obj),
+            error: function (error) {
+                swal("server return error", "", "error");
+            },
+            success: function (data, code) {
+                if (code == "success") {
+                    swal("Installed!", "", "success");
+                    $('#dig_group_install').modal('toggle');
+                    get_groups();
+                } else {
+                    swal("server return error.");
                 }
-            });
-            var obj = new Object();
-            obj.name = $("#git_name").val();
-            obj.data = $("#textarea_yaml").val();
-            $.ajax({
-                url: base_url + "/sdamanager/group/deploy",
-                type: "POST",
-                contentType: "application/json",
-                dataType: "json",
-                data: JSON.stringify(obj),
-                error: function (error) {
-                    swal("server return error", "", "error");
-                },
-                success: function (data, code) {
-                    if (code == "success") {
-                        swal("Installed!", "", "success");
-                        $('#dig_group_install').modal('toggle');
-                        get_groups();
-                    } else {
-                        swal("server return error.");
-                    }
-                }
-            });
-            $.ajaxSetup({
-                beforeSend: function () { },
-                complete: function () { }
-            });
-        }
+            }
+        });
+        $.ajaxSetup({
+            beforeSend: function () { },
+            complete: function () { }
+        });
     });
 
     $("#btn_install_new_app").click(function () {
