@@ -243,6 +243,10 @@ $(function() {
     });
 
     $("#btn_confirm_update_group_YAML").click(function() {
+        if ($("#textarea_update_new_yaml").val() == "") {
+            swal("Please input a new yaml", "", "error");
+            return
+        }
         var obj = new Object();
         obj.data = $("#textarea_update_group_yaml").val();
 

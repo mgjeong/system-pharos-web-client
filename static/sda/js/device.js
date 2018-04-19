@@ -44,7 +44,7 @@ $(function() {
         $("#service_tbody").empty();
         $("tr").removeClass("active");
         $(this).addClass("active");
-        $("#app_name").text($(this).find("td:eq(1)").text());
+        $("#git_name").text($(this).find("td:eq(1)").text());
 
         var obj = new Object();
         obj.id = $(this).attr('title');
@@ -233,6 +233,10 @@ $(function() {
     });
 
     $("#btn_confirm_update_YAML").click(function() {
+        if ($("#textarea_update_new_yaml").val() == "") {
+            swal("Please input a new yaml", "", "error");
+            return;
+        }
         var obj = new Object();
         obj.data = $("#textarea_update_new_yaml").val();
         swal({
@@ -287,8 +291,6 @@ $(function() {
                 success: function(data){
                     data=$.parseJSON(data)
                     $("#textarea_update_new_yaml").val(data);
-                    
-                    $("#btn_confirm_update_YAML").removeAttr("disabled");
                 }
             });
         }
@@ -302,8 +304,6 @@ $(function() {
                 },
                 success: function(data){
                     $("#textarea_update_new_yaml").val(data);
-
-                    $("#btn_confirm_update_YAML").removeAttr("disabled");
                 }
             });
         }

@@ -379,7 +379,7 @@ class DeviceAPI:
                 return abort(404)
 
         # Get/Write Git address to Web client DB
-        @app.route("/sdamanager/git", methods=["GET", "POST"])
+        @app.route("/sdamanager/git", methods=["GET", "POST", "DELETE"])
         def sda_manager_git():
             logging.info("[" + request.method + "] sda manager Git - IN")
 
@@ -400,10 +400,18 @@ class DeviceAPI:
                     content_file.write(json.dumps(gits))
 
                 return "", 200
+            elif request.method == "DELETE":
+                root_path = os.getcwd()
+
+                with open(root_path + "/static/user/gits", 'w+') as content_file:
+                    content_file.write(request.data)
+                
+                return "", 200
+
             else:
                 logging.error("Unknown Method - OUT")
                 return abort(404)
-        
+
         # Git clone Samsung github
         @app.route("/sdamanager/git/clone", methods=["POST"])
         def use_subprocess():
