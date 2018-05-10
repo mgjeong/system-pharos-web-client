@@ -5,7 +5,7 @@ ENV https_proxy 'https://10.112.1.184:8080'
 
 RUN update-ca-certificates
 
-RUN pip install Flask requests PyYAML
+RUN pip install --proxy=http://10.112.1.184:8080 --trusted-host pypi.python.org Flask requests PyYAML
 
 RUN mkdir web
 COPY ./ /web
