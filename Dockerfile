@@ -2,7 +2,7 @@ FROM python:2.7
 
 RUN update-ca-certificates
 
-RUN pip install --trusted-host pypi.python.org Flask requests PyYAML
+RUN pip install Flask requests PyYAML
 
 RUN mkdir web
 COPY ./ /web
