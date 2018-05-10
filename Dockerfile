@@ -1,4 +1,6 @@
-FROM python:2.7 
+FROM python:2.7
+
+RUN apt-get update && apt-get install -y ca-certificates
 
 RUN pip install --trusted-host pypi.python.org Flask requests PyYAML
 
