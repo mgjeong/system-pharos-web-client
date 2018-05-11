@@ -4,7 +4,7 @@
 ## Prerequisites ##
 - Python and required packages
 ```shell
-$ sudo apt-get install python python-pip
+$ sudo apt-get install python python-pip curl
 $ sudo pip install Flask requests PyYAML
 ```
 
