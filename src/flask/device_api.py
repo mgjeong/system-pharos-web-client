@@ -412,21 +412,35 @@ class DeviceAPI:
                 logging.error("Unknown Method - OUT")
                 return abort(404)
 
-        # Git clone Samsung github
-        @app.route("/sdamanager/git/clone", methods=["POST"])
-        def use_subprocess():
-            repo = json.loads(request.data)["repo"]
-            repo_array = repo.split('/')
-            p = subprocess.Popen("git clone git@github.sec.samsung.net:"+repo+".git", shell=True)
-            p.communicate();
-            ret = subprocess.Popen(["cat", repo_array[1]+"/docker-compose.yml"],
+        # Get Recipe
+        @app.route("/sdamanager/recipe", methods=["post"])
+        def get_recipe():
+            url = json.loads(request.data)["repo"]
+            url = url.replace("https://", "")
+            url_arr = url.split('/')
+            gitaddress = url_arr[0]
+            username = url_arr[1]
+            reponame = url_arr[2]
+            if len(url_arr)>3:
+                branch = url_arr[4]
+            else:
+                branch = "master"
+            filepath = "docker-compose.yml"
+
+            if gitaddress == "github.sec.samsung.net":
+                token = "7b9e3ba11366db09ad9cfbf409750cfdc6ba7edc"
+                recipe = "https://"+token+"@github.sec.samsung.net/raw/"
+            else:
+                recipe = "https://raw.githubusercontent.com/"
+            recipe += username+"/"+reponame+"/"+branch+"/"+filepath
+            
+            ret = subprocess.Popen("curl -s "+recipe,
+                shell=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE)
             content, error = ret.communicate()
-            p = subprocess.Popen("rm -rf "+repo_array[1], shell=True)
-            p.communicate();
             return json.dumps(content), 200
-
+            
         # Register Device
         @app.route("/sdamanager/register", methods=["POST"])
         def sda_manager_device_register():
