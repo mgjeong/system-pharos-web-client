@@ -91,13 +91,19 @@ class DeviceAPI:
                     logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
                     abort(500)
                 if "properties" in response.json():
-                    props = response.json()["properties"]
-                    d.update({"name":str(props[0]["devicename"])})
-                    d.update({"pinginterval":str(props[1]["pinginterval"])})
-                    d.update({"os":str(props[2]["os"])})
-                    d.update({"platform":str(props[3]["platform"]["family"])})
-                    d.update({"version":str(props[3]["platform"]["version"])})
-                    d.update({"processor":str(props[4]["processor"][0]["modelname"])})
+                    for prop in response.json()["properties"]:
+                        if "devicename" in prop:
+                            d.update({"name": str(prop["devicename"])})
+                        elif "pinginterval" in prop:
+                            d.update({"pinginterval": str(prop["pinginterval"])})
+                        elif "os" in prop:
+                            d.update({"os": str(prop["os"])})
+                        elif "platform" in prop:
+                            d.update({"platform": str(prop["platform"]["family"])})
+                            d.update({"version": str(prop["platform"]["version"])})
+                        elif "processor" in prop:
+                            d.update({"processor": str(prop["processor"][0]["modelname"])})
+
                 return json.dumps(d), 200
 
             elif request.method == "POST":
