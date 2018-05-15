@@ -89,9 +89,9 @@ class GroupAPI:
                                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/nodes/" + str(obj["id"]) + "/configuration", 
                                 timeout=1500)
                             if res.status_code is 200:
-                                props = res.json()["properties"][0]
-                                if "devicename" in props:
-                                    d.update({"name": str(props["devicename"])})
+                                for prop in res.json()["properties"]:
+                                    if "devicename" in prop:
+                                        d.update({"name": str(prop["devicename"])})
                         if "ip" in obj:
                             d.update({"ip": str(obj["ip"])})
                         if "status" in obj:
@@ -174,9 +174,9 @@ class GroupAPI:
                         url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/nodes/" + str(obj["id"]) + "/configuration", 
                         timeout=1500)
                     if res.status_code is 200:
-                        props = res.json()["properties"][0]
-                        if "devicename" in props:
-                            d.update({"name": str(props["devicename"])})
+                        for prop in res.json()["properties"]:
+                            if "devicename" in prop:
+                                d.update({"name": str(prop["devicename"])})
                     if "ip" in obj:
                         d.update({"ip": str(obj["ip"])})
                     if "status" in obj:
@@ -352,9 +352,9 @@ class GroupAPI:
                             url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/nodes/" + str(obj["id"]) + "/configuration", 
                             timeout=1500)
                         if res.status_code is 200:
-                            props = res.json()["properties"][0]
-                            if "devicename" in props:
-                                d.update({"name": str(props["devicename"])})
+                            for prop in res.json()["properties"]:
+                                if "devicename" in prop:
+                                    d.update({"name": str(prop["devicename"])})
                     if "ip" in obj:
                         d.update({"ip": str(obj["ip"])})
                     if "status" in obj:
