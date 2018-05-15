@@ -35,21 +35,12 @@ class GroupAPI:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
                 abort(500)
 
-            root_path = os.getcwd()
-            with open(root_path + "/static/user/groups", 'r') as content_file:
-                content = content_file.read()
-
             for obj in response.json()["groups"]:
                 d = dict()
                 if "id" in obj:
                     d.update({"id": str(obj["id"])})
-                    if content != "":
-                        groups = json.loads(content)
-                        for group in groups["groups"]:
-                            if group["id"] == str(obj["id"]):
-                                d.update({"name": group["name"]})
-                if "description" in obj:
-                    d.update({"name": str(obj["description"])})
+                if "name" in obj:
+                    d.update({"name": str(obj["name"])})
                 if "members" in obj:
                     d.update({"members": str(len(obj["members"]))})
                 l.append(d)
@@ -133,19 +124,6 @@ class GroupAPI:
             if response.status_code is not 200 or response2.status_code is not 200:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
                 abort(500)
-
-            group = {"id": response.json()["id"], "name": data["name"]}
-            root_path = os.getcwd()
-            with open(root_path + "/static/user/groups", 'r') as content_file:
-                content = content_file.read()
-                if content == "":
-                    groups = {"groups": l}
-                else:
-                    groups = json.loads(content)
-                groups["groups"].append(group)
-
-            with open(root_path + "/static/user/groups", 'w+') as content_file:
-                content_file.write(json.dumps(groups))
 
             return "", 200
 
