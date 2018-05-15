@@ -186,8 +186,8 @@ class DeviceAPI:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
                 abort(500)
 
-            if "properties" in response.json():
-                for prop in response.json()["properties"]:
+            if "properties" in response3.json():
+                for prop in response3.json()["properties"]:
                     if "devicename" in prop:
                         device_name = str(prop["devicename"])
                         ret.update({"device": device_name + "(" + SDAManager.get_device_ip() + ")", "apps": l})
