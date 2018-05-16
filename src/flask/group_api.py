@@ -74,10 +74,6 @@ class GroupAPI:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
                 abort(500)
 
-            root_path = os.getcwd()
-            with open(root_path + "/static/user/devices", 'r') as content_file:
-                content = content_file.read()
-
             for obj in response2.json()["nodes"]:
                 for member in response.json()["members"]:
                     d = dict()
@@ -210,6 +206,10 @@ class GroupAPI:
             d.update({"id": response.json()["id"], "name": data["name"]})
 
             root_path = os.getcwd()
+
+            if not os.path.exists(root_path + "/static/user/apps"):
+                with open(root_path + "/static/user/apps", 'w'): pass
+
             with open(root_path + "/static/user/apps", 'r') as content_file:
                 content = content_file.read()
                 if content == "":
@@ -290,6 +290,10 @@ class GroupAPI:
                 abort(500)
 
             root_path = os.getcwd()
+
+            if not os.path.exists(root_path + "/static/user/apps"):
+                with open(root_path + "/static/user/apps", 'w'): pass
+
             with open(root_path + "/static/user/apps", 'r') as content_file:
                 content = content_file.read()
                 if content != "":

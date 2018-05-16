@@ -154,6 +154,10 @@ class DeviceAPI:
                 abort(500)
 
             root_path = os.getcwd()
+
+            if not os.path.exists(root_path + "/static/user/apps"):
+                with open(root_path + "/static/user/apps", 'w'): pass
+
             with open(root_path + "/static/user/apps", 'r') as content_file:
                 content = content_file.read()
                 if content != "":
@@ -262,6 +266,10 @@ class DeviceAPI:
             d.update({"id": response.json()["id"], "name": data["name"]})
 
             root_path = os.getcwd()
+
+            if not os.path.exists(root_path + "/static/user/apps"):
+                with open(root_path + "/static/user/apps", 'w'): pass
+
             with open(root_path + "/static/user/apps", 'r') as content_file:
                 content = content_file.read()
                 if content == "":
@@ -361,48 +369,30 @@ class DeviceAPI:
 
                 return "", 200
 
-        # Get/Write Yaml file to Web client DB
-        @app.route("/sdamanager/yaml", methods=["GET", "POST"])
-        def sda_manager_yaml():
-            logging.info("[" + request.method + "] sda manager YAML - IN")
-
-            if request.method == "GET":
-                root_path = os.getcwd()
-                with open(root_path + "/static/user/yamls", 'r') as content_file:
-                    content = content_file.read()
-
-                return json.dumps(content), 200
-            elif request.method == "POST":
-                root_path = os.getcwd()
-                with open(root_path + "/static/user/yamls", 'r') as content_file:
-                    content = content_file.read()
-                    yamls = json.loads(content)
-                    yamls["yamls"].append(json.loads(request.data))
-
-                with open(root_path + "/static/user/yamls", 'w+') as content_file:
-                    content_file.write(json.dumps(yamls))
-
-                return "", 200
-            else:
-                logging.error("Unknown Method - OUT")
-                return abort(404)
-
         # Get/Write Git address to Web client DB
         @app.route("/sdamanager/git", methods=["GET", "POST", "DELETE"])
         def sda_manager_git():
             logging.info("[" + request.method + "] sda manager Git - IN")
 
+            root_path = os.getcwd()
+
+            if not os.path.exists(root_path + "/static/user/gits"):
+                with open(root_path + "/static/user/gits", 'w'): pass
+
             if request.method == "GET":
-                root_path = os.getcwd()
                 with open(root_path + "/static/user/gits", 'r') as content_file:
                     content = content_file.read()
 
                 return json.dumps(content), 200
             elif request.method == "POST":
-                root_path = os.getcwd()
                 with open(root_path + "/static/user/gits", 'r') as content_file:
                     content = content_file.read()
-                    gits = json.loads(content)
+
+                    if content == "":
+                        gits = {"gits": list()}
+                    else:
+                        gits = json.loads(content)
+
                     gits["gits"].append(json.loads(request.data))
 
                 with open(root_path + "/static/user/gits", 'w+') as content_file:
@@ -410,8 +400,6 @@ class DeviceAPI:
 
                 return "", 200
             elif request.method == "DELETE":
-                root_path = os.getcwd()
-
                 with open(root_path + "/static/user/gits", 'w+') as content_file:
                     content_file.write(request.data)
                 
@@ -449,47 +437,6 @@ class DeviceAPI:
                 stderr=subprocess.PIPE)
             content, error = ret.communicate()
             return json.dumps(content), 200
-            
-        # Register Device
-        @app.route("/sdamanager/register", methods=["POST"])
-        def sda_manager_device_register():
-            logging.info("[" + request.method + "] sda manager device register - IN")
-
-            d = dict()
-            d2 = dict()
-            d3 = dict()
-            data = json.loads(request.data)
-
-            l = list()
-            
-            d2.update({"manager": str(SDAManager().get_sda_manager_ip())})
-            d2.update({"node": str(data["ip"])})
-            d3.update({"interval": str(data["interval"])})
-            d.update({"ip": d2, "healthCheck": d3})
-
-            response = requests.post(
-                url="http://" + data["ip"] + ":" + str(Port.sda_port()) + "/api/v1/register",
-                data=json.dumps(d),
-                timeout=1500)
-
-            if response.status_code is not 200:
-                logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
-                abort(500)
-
-            device = {"devicename": data["name"], "deviceip": data["ip"]}
-            root_path = os.getcwd()
-            with open(root_path + "/static/user/devices", 'r') as content_file:
-                content = content_file.read()
-                if content == "":
-                    devices = {"devices": l}
-                else:
-                    devices = json.loads(content)
-                devices["devices"].append(device)
-
-            with open(root_path + "/static/user/devices", 'w+') as content_file:
-                content_file.write(json.dumps(devices))
-
-            return "", 200
 
         # Unregister Device
         @app.route("/sdamanager/unregister", methods=["POST"])
