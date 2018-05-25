@@ -96,13 +96,6 @@ class DeviceAPI:
                             d.update({"name": str(prop["devicename"])})
                         elif "pinginterval" in prop:
                             d.update({"pinginterval": str(prop["pinginterval"])})
-                        elif "os" in prop:
-                            d.update({"os": str(prop["os"])})
-                        elif "platform" in prop:
-                            d.update({"platform": str(prop["platform"]["family"])})
-                            d.update({"version": str(prop["platform"]["version"])})
-                        elif "processor" in prop:
-                            d.update({"processor": str(prop["processor"][0]["modelname"])})
 
                 return json.dumps(d), 200
 
