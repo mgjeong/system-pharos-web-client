@@ -245,7 +245,7 @@ class GroupAPI:
             join_list = request.json["nodes"]
             leave_list = response.json()["members"]
 
-            for i in join_list:
+            for i in join_list[:]:
                 if i in leave_list:
                     join_list.remove(i)
                     leave_list.remove(i)
