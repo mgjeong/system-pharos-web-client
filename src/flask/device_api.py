@@ -28,6 +28,20 @@ class DeviceAPI:
             else:
                 return abort(404)
 
+        # Get/Set Reverse Proxy
+        @app.route("/sdamanager/reverseproxy", methods=["GET", "POST"])
+        def sda_manager_reverseproxy():
+            logging.info("[" + request.method + "] sda manager reverse proxy - IN")
+
+            if request.method == "GET":
+                return SDAManager().get_reverse_proxy(), 200
+            elif request.method == "POST":
+                data = json.loads(request.data)
+                SDAManager.set_reverse_proxy(data["enabled"])
+                return SDAManager().get_reverse_proxy(), 200
+            else:
+                return abort(404)
+
         # Get devices(SDAs) Info.
         @app.route("/sdamanager/devices", methods=["GET"])
         def sda_manager_devices():
@@ -37,7 +51,7 @@ class DeviceAPI:
             ret = dict()
 
             response = requests.get(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/nodes", 
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/nodes",
                 timeout=1500)
 
             if response.status_code is not 200:
@@ -50,7 +64,7 @@ class DeviceAPI:
                     d.update({"id": str(obj["id"])})
 
                     res = requests.get(
-                        url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/nodes/" + str(obj["id"]) + "/configuration", 
+                        url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/nodes/" + str(obj["id"]) + "/configuration",
                         timeout=1500)
                     if res.status_code is 200:
                         for prop in res.json()["properties"]:
@@ -83,7 +97,7 @@ class DeviceAPI:
             if request.method == "GET":
                 d = dict()
                 response = requests.get(
-                    url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/nodes/"
+                    url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/nodes/"
                         + SDAManager.get_device_id() + "/configuration",
                     timeout=1500)
                 
@@ -101,7 +115,7 @@ class DeviceAPI:
 
             elif request.method == "POST":
                 response = requests.post(
-                    url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/nodes/"
+                    url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/nodes/"
                         + SDAManager.get_device_id() + "/configuration",
                     data=request.data,
                     timeout=1500)
@@ -118,7 +132,7 @@ class DeviceAPI:
             logging.info("[" + request.method + "] sda manager resource - IN")
             d = dict()
             response = requests.get(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/monitoring/nodes/"
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/monitoring/nodes/"
                     + SDAManager.get_device_id() + "/resource",
                 timeout=1500)
             if response.status_code is not 200:
@@ -138,7 +152,7 @@ class DeviceAPI:
             ret = dict()
 
             response = requests.get(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/nodes/"
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/nodes/"
                     + SDAManager.get_device_id(),
                 timeout=1500)
 
@@ -160,7 +174,7 @@ class DeviceAPI:
                 d = dict()
                 d.update({"id": str(obj)})
                 response2 = requests.get(
-                    url="http://" + SDAManager().get_sda_manager_ip() + ":" + str( Port.sda_manager_port()) + "/api/v1/management/nodes/"
+                    url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/nodes/"
                         + SDAManager.get_device_id() + "/apps/" + str(obj),
                     timeout=1500)
 
@@ -177,7 +191,7 @@ class DeviceAPI:
 
                 l.append(d)
             response3 = requests.get(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/nodes/" + SDAManager.get_device_id() + "/configuration", 
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/nodes/" + SDAManager.get_device_id() + "/configuration",
                 timeout=1500)
             if response3.status_code is not 200:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -204,7 +218,7 @@ class DeviceAPI:
                 SDAManager.set_app_id(data["id"])
 
                 response = requests.get(
-                    url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/nodes/"
+                    url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/nodes/"
                         + SDAManager.get_device_id() + "/apps/" + SDAManager.get_app_id(),
                     timeout=1500)
 
@@ -224,8 +238,7 @@ class DeviceAPI:
                 return json.dumps(json.dumps(ret)), 200
             elif request.method == "DELETE":
                 response = requests.delete(
-                    url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(
-                        Port.sda_manager_port()) + "/api/v1/management/nodes/"
+                    url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/nodes/"
                         + SDAManager.get_device_id() + "/apps/" + SDAManager.get_app_id(),
                     timeout=1500)
 
@@ -247,7 +260,7 @@ class DeviceAPI:
             data = json.loads(request.data)
 
             response = requests.post(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/nodes/"
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/nodes/"
                     + SDAManager.get_device_id() + "/apps/deploy",
                 data=data["data"],
                 timeout=1500)
@@ -282,7 +295,7 @@ class DeviceAPI:
             logging.info("[" + request.method + "] sda manager app update - IN")
 
             response = requests.post(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/nodes/"
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/nodes/"
                     + SDAManager.get_device_id() + "/apps/" + SDAManager.get_app_id()
                     + "/start",
                 timeout=1500)
@@ -299,7 +312,7 @@ class DeviceAPI:
             logging.info("[" + request.method + "] sda manager app update - IN")
 
             response = requests.post(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/nodes/"
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/nodes/"
                     + SDAManager.get_device_id() + "/apps/" + SDAManager.get_app_id()
                     + "/stop",
                 timeout=1500)
@@ -316,7 +329,7 @@ class DeviceAPI:
             logging.info("[" + request.method + "] sda manager app update - IN")
 
             response = requests.post(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/nodes/"
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/nodes/"
                     + SDAManager.get_device_id() + "/apps/" + SDAManager.get_app_id()
                     + "/update",
                 timeout=1500)
@@ -335,7 +348,7 @@ class DeviceAPI:
             if request.method == "GET":
                 d = dict()
                 response = requests.get(
-                    url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/nodes/"
+                    url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/nodes/"
                         + SDAManager.get_device_id() + "/apps/" + SDAManager.get_app_id(),
                     timeout=1500)
 
@@ -351,7 +364,7 @@ class DeviceAPI:
                 data = json.loads(request.data)
 
                 response = requests.post(
-                    url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/nodes/"
+                    url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/nodes/"
                         + SDAManager.get_device_id() + "/apps/" + SDAManager.get_app_id(),
                     data=data["data"],
                     timeout=1500)
@@ -437,7 +450,7 @@ class DeviceAPI:
             logging.info("[" + request.method + "] sda manager device register - IN")
 
             response = requests.post(
-                url="http://" + SDAManager.get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/nodes/" + SDAManager.get_device_id() + "/unregister",
+                url="http://" + SDAManager.get_sda_manager_endpoint() + "/api/v1/management/nodes/" + SDAManager.get_device_id() + "/unregister",
                 timeout=1500)
 
             if response.status_code is not 200:

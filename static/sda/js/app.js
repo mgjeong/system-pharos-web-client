@@ -231,7 +231,7 @@ $(function() {
                         success: function(data, code) {
                             if (code == "success") {
                                 get_group_apps();
-                                swal("Stoped!", "", "success");
+                                swal("Stopped!", "", "success");
                             } else {
                                 swal("server return error", "", "error");
                             }

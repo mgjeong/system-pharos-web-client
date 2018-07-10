@@ -15,6 +15,7 @@ class Port():
 
 ### Define Global Values ###
 class SDAManager:
+    reverse_proxy = "false"
     sda_manager_ip = ""
     group_id = ""
     current_group_name = ""
@@ -27,8 +28,23 @@ class SDAManager:
         pass
 
     @classmethod
+    def set_reverse_proxy(cls, enabled):
+        cls.reverse_proxy = enabled
+
+    @classmethod
+    def get_reverse_proxy(cls):
+        return cls.reverse_proxy
+
+    @classmethod
     def set_sda_manager_ip(cls, address):
         cls.sda_manager_ip = address
+
+    @classmethod
+    def get_sda_manager_endpoint(cls):
+        if cls.reverse_proxy == "false":
+            return cls.sda_manager_ip + ":48099"
+        else:
+            return cls.sda_manager_ip + ":80/pharos-anchor"
 
     @classmethod
     def get_sda_manager_ip(cls):
