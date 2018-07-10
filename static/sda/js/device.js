@@ -201,7 +201,7 @@ $(function() {
                         success: function(data, code) {
                             if (code == "success") {
                                 get_apps();
-                                swal("Stoped!", "", "success");
+                                swal("Stopped!", "", "success");
                             } else {
                                 swal("Server return error", "", "error");
                             }
