@@ -28,7 +28,7 @@ class GroupAPI:
                 return json.dumps(d), 200
 
             response = requests.get(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/groups",
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/groups",
                 timeout=1500)
 
             if response.status_code is not 200:
@@ -62,12 +62,12 @@ class GroupAPI:
             SDAManager.set_current_group_name(data["name"])
 
             response = requests.get(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/groups/"
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/groups/"
                     + SDAManager.get_group_id(),
                 timeout=1500)
 
             response2 = requests.get(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/nodes",
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/nodes",
                 timeout=1500)
 
             if response.status_code is not 200 or response2.status_code is not 200:
@@ -82,7 +82,7 @@ class GroupAPI:
                             d.update({"id": str(obj["id"])})
 
                             res = requests.get(
-                                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/nodes/" + str(obj["id"]) + "/configuration", 
+                                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/nodes/" + str(obj["id"]) + "/configuration",
                                 timeout=1500)
                             if res.status_code is 200:
                                 for prop in res.json()["properties"]:
@@ -107,12 +107,12 @@ class GroupAPI:
 
             data = json.loads(request.data)
             response = requests.post(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/groups/create",
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/groups/create",
                 data=json.dumps(data),
                 timeout=1500)
 
             response2 = requests.post(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/groups/"
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/groups/"
                     + response.json()["id"] + "/join",
                 data=json.dumps(data["members"]),
                 timeout=1500)
@@ -129,7 +129,7 @@ class GroupAPI:
             logging.info("[" + request.method + "] sda manager group delete - IN")
 
             response = requests.delete(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/groups/"
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/groups/"
                     + SDAManager.get_group_id(),
                 timeout=1500)
 
@@ -148,12 +148,12 @@ class GroupAPI:
             ret = dict()
 
             response = requests.get(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/groups/"
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/groups/"
                     + SDAManager.get_group_id(),
                 timeout=1500)
 
             response2 = requests.get(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/nodes")
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/nodes")
 
             if response.status_code is not 200 or response2.status_code is not 200:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -167,7 +167,7 @@ class GroupAPI:
                 if "id" in obj and str(obj["id"]) in l2:
                     d.update({"id": str(obj["id"])})
                     res = requests.get(
-                        url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/nodes/" + str(obj["id"]) + "/configuration", 
+                        url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/nodes/" + str(obj["id"]) + "/configuration",
                         timeout=1500)
                     if res.status_code is 200:
                         for prop in res.json()["properties"]:
@@ -194,7 +194,7 @@ class GroupAPI:
 
             data = json.loads(request.data)
             response = requests.post(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/groups/"
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/groups/"
                     + SDAManager.get_group_id() + "/apps/deploy",
                 data=data["data"],
                 timeout=1500)
@@ -235,7 +235,7 @@ class GroupAPI:
             leave_dict = dict()
 
             response = requests.get(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/groups/" + SDAManager.get_group_id(),
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/groups/" + SDAManager.get_group_id(),
                 timeout=1500)
 
             if response.status_code is not 200:
@@ -254,13 +254,13 @@ class GroupAPI:
             leave_dict.update({"nodes": leave_list})
 
             response2 = requests.post(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/groups/"
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/groups/"
                     + SDAManager.get_group_id() + "/join",
                 data=json.dumps(join_dict),
                 timeout=1500)
 
             response3 = requests.post(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/groups/"
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/groups/"
                     + SDAManager.get_group_id() + "/leave",
                 data=json.dumps(leave_dict),
                 timeout=1500)
@@ -281,7 +281,7 @@ class GroupAPI:
             ret = dict()
 
             response = requests.get(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/groups/"
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/groups/"
                     + SDAManager.get_group_id() + "/apps",
                 timeout=1500)
 
@@ -303,7 +303,7 @@ class GroupAPI:
                 d = dict()
                 d.update({"id": str(obj["id"])})
                 response2 = requests.get(
-                    url="http://" + SDAManager().get_sda_manager_ip() + ":" + str( Port.sda_manager_port()) + "/api/v1/management/groups/"
+                    url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/groups/"
                         + SDAManager.get_group_id() + "/apps/" + str(obj["id"]),
                     timeout=1500)
 
@@ -335,11 +335,11 @@ class GroupAPI:
                 SDAManager.set_app_id(json.loads(request.data)["id"])
 
                 response = requests.get(
-                    url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/nodes",
+                    url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/nodes",
                     timeout=1500)
 
                 response2 = requests.get(
-                    url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/groups/"
+                    url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/groups/"
                         + SDAManager.get_group_id() + "/apps",
                     timeout=1500)
 
@@ -353,7 +353,7 @@ class GroupAPI:
                         d.update({"id": str(obj["id"])})
 
                         res = requests.get(
-                            url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/nodes/" + str(obj["id"]) + "/configuration", 
+                            url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/nodes/" + str(obj["id"]) + "/configuration",
                             timeout=1500)
                         if res.status_code is 200:
                             for prop in res.json()["properties"]:
@@ -378,7 +378,7 @@ class GroupAPI:
                 return json.dumps(json.dumps(ret)), 200
             elif request.method == "DELETE":
                 response = requests.delete(
-                    url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/groups/"
+                    url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/groups/"
                         + SDAManager.get_group_id() + "/apps/" + SDAManager.get_app_id(),
                     timeout=1500)
 
@@ -394,7 +394,7 @@ class GroupAPI:
             logging.info("[" + request.method + "] sda manager group app update - IN")
 
             response = requests.post(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/groups/"
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/groups/"
                     + SDAManager.get_group_id() + "/apps/" + SDAManager.get_app_id()
                     + "/start",
                 timeout=1500)
@@ -411,7 +411,7 @@ class GroupAPI:
             logging.info("[" + request.method + "] sda manager group app update - IN")
 
             response = requests.post(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/groups/"
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/groups/"
                     + SDAManager.get_group_id() + "/apps/" + SDAManager.get_app_id()
                     + "/stop",
                 timeout=1500)
@@ -428,7 +428,7 @@ class GroupAPI:
             logging.info("[" + request.method + "] sda manager group app update - IN")
 
             response = requests.post(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/groups/"
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/groups/"
                     + SDAManager.get_group_id() + "/apps/" + SDAManager.get_app_id()
                     + "/update",
                 timeout=1500)
@@ -447,7 +447,7 @@ class GroupAPI:
             data = json.loads(request.data)
 
             response = requests.post(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/management/groups/"
+                url="http://" + SDAManager().get_sda_manager_endpoint() + "/api/v1/management/groups/"
                     + SDAManager.get_group_id() + "/apps/" + SDAManager.get_app_id(),
                 data=data["data"],
                 timeout=1500)

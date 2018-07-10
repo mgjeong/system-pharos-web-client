@@ -149,6 +149,9 @@ input[type=radio] {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     padding: 0;
+    vertical-align: middle;
+    width:25px;
+    height:25px;
 }
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {

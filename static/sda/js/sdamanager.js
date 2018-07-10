@@ -8,7 +8,28 @@ var include_devices_nodes;
 var SDAManagerAddress;
 
 function sdamanager_onLoad() {
+    set_reverse_proxy();
     get_groups();
+}
+
+function set_reverse_proxy() {
+    enabled = document.getElementById("sda_manager_reverse_proxy");
+
+    $.ajax({
+        url: base_url + "/sdamanager/reverseproxy",
+        type: "GET",
+        error: function(error) {
+            swal("server return error", "", "error");
+        },
+        success: function(data, code) {
+            if (code == "success") {
+                enabled.checked = $.parseJSON(data)
+            }
+            else {
+                swal("server return error", "", "error");
+            }
+        }
+    });
 }
 
 function isSDAManagerAddress(){
@@ -257,6 +278,35 @@ $(function() {
                     $("#sda_manager_ip").val(data);
                     swal("Connected!", "", "success");
                     get_groups();
+                }
+                else {
+                    swal("server return error", "", "error");
+                }
+            }
+        });
+    });
+
+    $("#sda_manager_reverse_proxy").change(function(event) {
+        var obj = new Object();
+        var checkbox = event.target;
+
+        if (checkbox.checked) {
+            obj.enabled = "true";
+        } else {
+            obj.enabled = "false";
+        }
+
+        $.ajax({
+            url: base_url + "/sdamanager/reverseproxy",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(obj),
+            error: function(error) {
+                swal("server return error", "", "error");
+            },
+            success: function(data, code) {
+                if (code == "success") {
+                    swal("Updated!", "", "success");
                 }
                 else {
                     swal("server return error", "", "error");
