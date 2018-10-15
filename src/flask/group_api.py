@@ -40,7 +40,7 @@ class GroupAPI:
                 if "id" in obj:
                     d.update({"id": str(obj["id"])})
                 if "name" in obj:
-                    d.update({"name": str(obj["name"])})
+                    d.update({"name": (obj["name"]).encode('utf-8')})
                 if "members" in obj:
                     d.update({"members": str(len(obj["members"]))})
                 l.append(d)
