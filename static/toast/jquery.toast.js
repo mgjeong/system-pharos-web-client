@@ -6,7 +6,7 @@
 		typeof o.sticky === 'boolean' || (o.sticky = false);
 		typeof o.type === 'string' || (o.type = '');
 		// create host on first call
-		if(!th){ 
+		if(!th){
 			// get/fix config
 			cf = toast.config;
 			th = $('<ul></ul>').addClass('toast').appendTo(document.body);
