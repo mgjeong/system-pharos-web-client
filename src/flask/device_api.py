@@ -408,7 +408,7 @@ class DeviceAPI:
             elif request.method == "DELETE":
                 with open(root_path + "/static/user/gits", 'w+') as content_file:
                     content_file.write(request.data)
-                
+
                 return "", 200
 
             else:
@@ -430,13 +430,9 @@ class DeviceAPI:
                 branch = "master"
             filepath = "docker-compose.yml"
 
-            if gitaddress == "github.sec.samsung.net":
-                token = "7b9e3ba11366db09ad9cfbf409750cfdc6ba7edc"
-                recipe = "https://"+token+"@github.sec.samsung.net/raw/"
-            else:
-                recipe = "https://raw.githubusercontent.com/"
+            recipe = "https://raw.githubusercontent.com/"
             recipe += username+"/"+reponame+"/"+branch+"/"+filepath
-            
+
             ret = subprocess.Popen("curl -s "+recipe,
                 shell=True,
                 stdout=subprocess.PIPE,

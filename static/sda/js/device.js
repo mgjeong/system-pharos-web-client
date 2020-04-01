@@ -275,38 +275,18 @@ $(function() {
 
     $("#btn_confirm_get_YAML").click(function(){
         var repo=$('#new_git_address').val();
-        
-        if(repo.match('github.sec.samsung.net/')){ //samsung github
-            var repo_split=repo.split("github.sec.samsung.net/");
-            var obj = new Object();
-            obj.repo = repo_split[1];
-            $.ajax({
-                type: "POST",
-                url: "/sdamanager/git/clone",
-                contentType: "application/json",
-                data: JSON.stringify(obj),
-                error: function(error) {
-                    swal("server return error", "", "error");
-                },
-                success: function(data){
-                    data=$.parseJSON(data)
-                    $("#textarea_update_new_yaml").val(data);
-                }
-            });
-        }
-        else{ //public github
-            var repo_split = repo.split("github.com/");
-            $.ajax({
-                url: "https://raw.githubusercontent.com/"+repo_split[1]+"/master/docker-compose.yml",
-                type: "GET",
-                error: function(error) {
-                    swal("Server return error", "", "error");
-                },
-                success: function(data){
-                    $("#textarea_update_new_yaml").val(data);
-                }
-            });
-        }
+
+        var repo_split = repo.split("github.com/");
+	$.ajax({
+	    url: "https://raw.githubusercontent.com/"+repo_split[1]+"/master/docker-compose.yml",
+	    type: "GET",
+	    error: function(error) {
+		swal("Server return error", "", "error");
+	    },
+	    success: function(data){
+		$("#textarea_update_new_yaml").val(data);
+	    }
+	});
     });
 
     $("#btn_edit_device").click(function(){
