@@ -18,8 +18,7 @@ def main():
     # run server with bellow arguments
     # Refer this site= https://docs.python.org/2/howto/argparse.html
     parser = argparse.ArgumentParser(
-        description="This is Web Client APP for Pharos Node & Pharos Anchor.\n"
-                    "If you have problem, please contact us. (jihun.ha@samsung.com)",
+        description="This is Web Client APP for Pharos Node & Pharos Anchor.\n",
         formatter_class=argparse.RawTextHelpFormatter
     )
 
